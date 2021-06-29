@@ -80,12 +80,17 @@ namespace UAssetAPI
             writer.Seek(36, SeekOrigin.Current);
             writer.Seek(8, SeekOrigin.Current);
 
-            writer.Write(data.uexpDataOffset);
+            writer.Write(data.uexpDataOffset); //169
 
-            if (data.GuessedVersion >= UE4Version.VER_GUESSED_V1 && data.GuessedVersion < UE4Version.VER_GUESSED_V3) writer.Write(data.sectionSixOffset - 4);
-
+            if (data.GuessedVersion >= UE4Version.VER_GUESSED_V1 && data.GuessedVersion < UE4Version.VER_GUESSED_V3) {
+                var offsetWrite = data.sectionSixOffset - 4;
+                writer.Write(offsetWrite);
+            }
+            
             writer.Write(data.fileSize - 4);
 
+            stre.Seek(-4, SeekOrigin.End);
+            writer.Write(data.uexpDataOffset + 4);
             return stre.ToArray();
         }
 
