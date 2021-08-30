@@ -125,6 +125,7 @@ namespace UAssetAPI
                     writer.Write(data.links[i].Class);
                     writer.Write(data.links[i].Linkage);
                     writer.Write(data.links[i].Property);
+                    writer.Write(data.links[i].Target);
                     data.links[i].Index = --newIndex;
                 }
             }

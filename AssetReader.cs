@@ -168,7 +168,7 @@ namespace UAssetAPI
             parentClassPath = GetHeaderReference((int)GetLinkAt((int)parentClassLink.Linkage).Property);
         }
 
-        public int SearchForLink(ulong bbase, ulong bclass, int link, ulong property)
+        public int SearchForLink(ulong bbase, ulong bclass, int link, int property)
         {
             int currentPos = 0;
             for (int i = 0; i < links.Count; i++)
@@ -187,7 +187,7 @@ namespace UAssetAPI
             return 0;
         }
 
-        public int SearchForLink(ulong bbase, ulong bclass, ulong property)
+        public int SearchForLink(ulong bbase, ulong bclass, int property)
         {
             int currentPos = 0;
             for (int i = 0; i < links.Count; i++)
@@ -205,7 +205,7 @@ namespace UAssetAPI
             return 0;
         }
 
-        public int SearchForLink(ulong property)
+        public int SearchForLink(int property)
         {
             int currentPos = 0;
             for (int i = 0; i < links.Count; i++)
@@ -360,8 +360,9 @@ namespace UAssetAPI
                     ulong bbase = reader.ReadUInt64();
                     ulong bclass = reader.ReadUInt64();
                     int link = reader.ReadInt32();
-                    ulong property = reader.ReadUInt64();
-                    links.Add(new Link(bbase, bclass, link, property, Utils.GetLinkIndex(i)));
+                    int property = reader.ReadInt32();
+                    int target = reader.ReadInt32();
+                    links.Add(new Link(bbase, bclass, link, property, Utils.GetLinkIndex(i), target));
                 }
             }
 
