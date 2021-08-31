@@ -90,7 +90,12 @@ namespace UAssetAPI
             writer.Write(data.fileSize - 4);
 
             stre.Seek(-4, SeekOrigin.End);
-            writer.Write(data.uexpDataOffset + 4);
+            // this works
+            // writer.Write(data.uexpDataOffset + 4);
+            
+            //this might not
+            writer.Write(data.uexpDataOffset + data.preloadDataOffset);
+            
             return stre.ToArray();
         }
 
@@ -198,11 +203,10 @@ namespace UAssetAPI
             }
 
             // Uexp Data
-            if (data.UseSeparateBulkDataFiles)
-            {
+            if (data.UseSeparateBulkDataFiles) {
                 writer.Write(new byte[data.gapBeforeUexp]);
                 data.uexpDataOffset = (int)stre.Position;
-                foreach (int part in data.UExpData)
+                foreach (var part in data.UExpData)
                 {
                     writer.Write(part);
                 }

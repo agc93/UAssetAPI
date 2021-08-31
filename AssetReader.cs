@@ -22,7 +22,7 @@ namespace UAssetAPI
         /* Public Methods */
         public string path;
         public bool UseSeparateBulkDataFiles = false;
-        public List<int> UExpData;
+        public List<byte> UExpData;
         public Guid AssetGuid;
         public UE4Version GuessedVersion;
 
@@ -230,6 +230,7 @@ namespace UAssetAPI
         public int sectionFiveStringCount = 0;
         public int sectionFiveOffset = 0;
         public int uexpDataOffset = 0;
+        public int preloadDataOffset = 0;
         public int gapBeforeUexp = 0;
         public int fileSize = 0;
         public bool doWeHaveSectionFour = true;
@@ -333,6 +334,9 @@ namespace UAssetAPI
             fileSize = reader.ReadInt32() + 4;
 
             reader.ReadBytes(12); // 12 zeros
+            reader.ReadBytes(4); //advance through a value
+            var preloadOffset = reader.ReadInt32();
+            preloadDataOffset = preloadOffset - uexpDataOffset;
         }
 
         public void Read(BinaryReader reader, int[] manualSkips = null, int[] forceReads = null)
@@ -472,11 +476,11 @@ namespace UAssetAPI
                 {
                     gapBeforeUexp = uexpDataOffset - gapStart;
                     reader.BaseStream.Seek(uexpDataOffset, SeekOrigin.Begin);
-                    UExpData = new List<int>();
+                    UExpData = new List<byte>();
                     int firstStart = categories[0].ReferenceData.startV;
                     while (reader.BaseStream.Position < firstStart)
                     {
-                        UExpData.Add(reader.ReadInt32());
+                        UExpData.Add(reader.ReadByte());
                     }
                 }
 
